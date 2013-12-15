@@ -1,5 +1,6 @@
-// Fade an LED in and out like on
-// a sleeping computer
+// Sloth Shark code!
+// TODO: - remove code for one of the eyes since we won't need it
+//       - figure out why our main loop functions are extending the delay
 
 const int LED = 13;  // the pin for the standard LED
 int i = 0;           // We'll use this to count up and down
@@ -13,7 +14,7 @@ int right_eye[3] = {3, 5, 6};  // to keep the code a little simpler
 // blue:  pin 11
 
 void setup() {
-    attachInterrupt(flex_sensor_pin, detect_flex, RISING);
+    // attachInterrupt(flex_sensor_pin, detect_flex, RISING);
     pinMode(left_eye[0], OUTPUT);
     pinMode(left_eye[1], OUTPUT);
     pinMode(left_eye[2], OUTPUT);
@@ -25,8 +26,23 @@ void setup() {
 }
 
 void loop() {
+  // this loop doesn't exactly do what we expect. Instead, it delays
+  // our timing more than the 500ms we have using our delay function.
   sleepy_eyes();
-  detect_flex();
+  flex_value = analogRead(flex_sensor_pin);
+  if (flex_value > 820 && flex_value < 900) {
+    red_eyes_on();
+  }
+  if (flex_value < 830 && flex_value > 800) {
+    red_eyes_off();
+  }
+  // if (flex_value < 900) {
+  //   nukular_eyes_on();
+  // }
+  // else {
+  //   nukular_eyes_off();
+  // }
+  Serial.println(flex_value);
   delay(500);
   // begin_loop = micros();
   // detect_flex();
@@ -43,7 +59,7 @@ void loop() {
 }
 // end of main loop                                     
 
-void detect_flex() {
+void flex_control() {
   // this function will handle our flex sensor input.
   // Base unflexed value is ~800.
   flex_value = analogRead(flex_sensor_pin);
@@ -90,7 +106,7 @@ void red_eyes_off() {
 
 void rainbow_eyes() {
   // cycle through all three colors in our 
-  // rgb led
+  // rgb led eyes
   for (i = 0; i < 3; i++) {
     digitalWrite(left_eye[i], HIGH);
     digitalWrite(right_eye[i], HIGH);
