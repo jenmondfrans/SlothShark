@@ -25,8 +25,9 @@ void setup() {
 }
 
 void loop() {
+  sleepy_eyes();
   detect_flex();
-  delay(1000);
+  delay(500);
   // begin_loop = micros();
   // detect_flex();
   // delay(1000);
@@ -43,9 +44,22 @@ void loop() {
 // end of main loop                                     
 
 void detect_flex() {
+  // this function will handle our flex sensor input.
+  // Base unflexed value is ~800.
   flex_value = analogRead(flex_sensor_pin);
+  if (flex_value > 820 && flex_value < 900) {
+    red_eyes_on();
+  }
+  else {
+    red_eyes_off();
+  }
+  // if (flex_value < 900) {
+  //   nukular_eyes_on();
+  // }
+  // else {
+  //   nukular_eyes_off();
+  // }
   Serial.println(flex_value);
-  // this function will handle our flex sensor input
 }
 
 void nukular_eyes_on() {
@@ -64,6 +78,14 @@ void nukular_eyes_off() {
     digitalWrite(left_eye[i], LOW);
     digitalWrite(right_eye[i], LOW);
   }
+}
+
+void red_eyes_on() {
+  digitalWrite(left_eye[1], HIGH);
+}
+
+void red_eyes_off() {
+  digitalWrite(right_eye[1], LOW);
 }
 
 void rainbow_eyes() {
